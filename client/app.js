@@ -10,12 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.on('messageFromServer', (text)=>{
         postMessage(text);
     })
+    socket.on('broadcast-message', (text)=>{
+        postMessage(text);
+    })
+
+    socket.emit("set username", "TEST")
     
     document.querySelector('button').onclick = () => {
         const text = document.querySelector('.message').value;
         if(!text==""){
             socket.emit('messageFromClient', text);
-            postMessage(text);
         }
     };
    });

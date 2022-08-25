@@ -5,12 +5,18 @@ const io = require('socket.io')(http, {
 })
 
 io.on('connection', (socket)  => {
-    console.log("New user connected")
+    console.log(`User ${socket.id} connected`)
+
+    socket.on('disconnect', ()=> {
+        console.log(`User ${socket.id} disconnected`)
+    })
     
-    socket.emit("messageFromServer", "Welcome to the wonderful chat")
+    socket.emit("messageFromServer", `Welcome to the wonderful chat ${socket.id.substr(0,2)}`)
 
     socket.on("messageFromClient",(messageFromClient)=>{
-        console.log(messageFromClient)
+        socket.emit("messageFromServer", `${socket.id.substr(0,2)} said : ${messageFromClient}`)
+
+        socket.broadcast.emit('broadcast-message', `${socket.id.substr(0,2)} said : ${messageFromClient}`)
     })
 })
 
